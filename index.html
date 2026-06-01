@@ -25,8 +25,6 @@
     --radius: 16px;
     --radius-sm: 10px;
     --shadow: 0 8px 32px rgba(0,0,0,0.18);
-
-    /* Desktop sidebar */
     --sidebar-w: 240px;
   }
 
@@ -47,16 +45,57 @@
   }
 
   /* ══════════════════════════════════════════
-     DESKTOP LAYOUT SHELL
+     LOGIN OVERLAY — siempre encima de todo
+  ══════════════════════════════════════════ */
+  #login-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(160deg, var(--blue-dark) 0%, var(--blue-mid) 50%, var(--blue-light) 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem 1.5rem;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  #login-overlay.hidden {
+    opacity: 0; visibility: hidden; pointer-events: none;
+  }
+  .login-wrap {
+    width: 100%; max-width: 420px;
+    display: flex; flex-direction: column; gap: 1.5rem;
+    align-items: center;
+  }
+  .login-logo-area {
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  }
+  .logo-name { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-name span { color: var(--blue-light); }
+
+  .login-card {
+    width: 100%;
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(16px);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .login-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 0.25rem; }
+
+  .login-error {
+    background: rgba(220,53,69,0.15); border: 1px solid rgba(220,53,69,0.35);
+    border-radius: var(--radius-sm); padding: 0.6rem 0.9rem;
+    font-size: 13px; color: #ff9090; display: none;
+  }
+  .login-error.visible { display: block; }
+
+  /* ══════════════════════════════════════════
+     APP SHELL — oculto hasta hacer login
   ══════════════════════════════════════════ */
   .app-shell {
     display: flex;
     min-height: 100vh;
   }
 
-  /* ── Desktop Sidebar ── */
   .desktop-sidebar {
-    display: none; /* hidden on mobile */
+    display: none;
     width: var(--sidebar-w);
     flex-shrink: 0;
     background: linear-gradient(180deg, #0f3d7e 0%, #0a2d5e 100%);
@@ -101,7 +140,6 @@
     border-top: 1px solid var(--border);
   }
 
-  /* ── Main content area ── */
   .main-area {
     flex: 1;
     display: flex;
@@ -109,9 +147,8 @@
     min-height: 100vh;
   }
 
-  /* ── Desktop Topbar ── */
   .desktop-topbar {
-    display: none; /* hidden on mobile */
+    display: none;
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
@@ -150,103 +187,15 @@
     font-size: 11px; font-weight: 700;
   }
 
-  /* ── Desktop content wrapper ── */
   .desktop-content {
     flex: 1;
     padding: 1.75rem 2rem 2rem;
     overflow-y: auto;
   }
 
-  /* Desktop grid for home stats */
-  .desktop-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .desktop-stat-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-  }
-  .desktop-stat-card .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 0.5rem; }
-  .desktop-stat-card .stat-value { font-size: 28px; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
-  .desktop-stat-card .stat-sub { font-size: 12px; margin-top: 0.3rem; }
-
-  /* Desktop two-column layout */
-  .desktop-two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-  .desktop-three-col {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .desktop-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    position: relative; overflow: hidden;
-  }
-  .desktop-card::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    border-radius: var(--radius) var(--radius) 0 0;
-  }
-  .desktop-card.ingresos::before { background: linear-gradient(90deg, #5be87c, #00e0a0); }
-  .desktop-card.gastos::before   { background: linear-gradient(90deg, #ff7070, #ff9f40); }
-  .desktop-card.registros::before{ background: linear-gradient(90deg, #7eb8f5, #00a3bf); }
-  .desktop-card.cuentas::before  { background: linear-gradient(90deg, #ffd166, #ff9f40); }
-
-  .desktop-card-title {
-    font-size: 13px; font-weight: 600;
-    color: var(--text-muted); text-transform: uppercase;
-    letter-spacing: 0.7px; margin-bottom: 1rem;
-  }
-
-  /* Clickable module cards on desktop */
-  .desktop-module-card {
-    background: var(--card-bg); border: 1.5px solid var(--border);
-    border-radius: var(--radius); padding: 1.5rem;
-    cursor: pointer; transition: background 0.2s, transform 0.1s;
-    display: flex; flex-direction: column; gap: 0.75rem;
-    position: relative; overflow: hidden;
-  }
-  .desktop-module-card::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    border-radius: var(--radius) var(--radius) 0 0;
-  }
-  .desktop-module-card.ingresos::before { background: linear-gradient(90deg, #5be87c, #00e0a0); }
-  .desktop-module-card.gastos::before   { background: linear-gradient(90deg, #ff7070, #ff9f40); }
-  .desktop-module-card.registros::before{ background: linear-gradient(90deg, #7eb8f5, #00a3bf); }
-  .desktop-module-card.cuentas::before  { background: linear-gradient(90deg, #ffd166, #ff9f40); }
-  .desktop-module-card:hover { background: var(--surface-hover); transform: translateY(-2px); }
-  .desktop-module-card:active { transform: scale(0.98); }
-  .desktop-module-icon {
-    width: 44px; height: 44px;
-    background: rgba(255,255,255,0.12);
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-  }
-  .desktop-module-icon svg { width: 22px; height: 22px; }
-  .desktop-module-label { font-size: 16px; font-weight: 700; }
-  .desktop-module-sub   { font-size: 12px; color: var(--text-muted); }
-  .desktop-module-amount { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 700; margin-top: auto; }
-
-  /* ══════════════════════════════════════════
-     MOBILE-ONLY ELEMENTS (original)
-  ══════════════════════════════════════════ */
   .mobile-only { display: block; }
   .desktop-only { display: none; }
 
-  /* ── SCREENS ── */
   .screen {
     display: none;
     flex-direction: column;
@@ -260,30 +209,6 @@
     from { opacity: 0; transform: translateY(6px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
-  /* Login screen stays centered always */
-  .login-screen {
-    justify-content: center; align-items: center;
-    padding: 2rem 1.5rem; gap: 0.75rem;
-    max-width: 440px; margin: 0 auto;
-  }
-  .login-screen .logo-area {
-    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-  }
-  .login-screen .logo-icon svg { width: 36px; height: 36px; }
-  .logo-name { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-  .logo-name span { color: var(--blue-light); }
-
-  .login-card {
-    width: 100%;
-    background: rgba(255,255,255,0.10);
-    backdrop-filter: blur(16px);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 2rem 1.5rem;
-    display: flex; flex-direction: column; gap: 1rem;
-  }
-  .login-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 0.25rem; }
 
   .input-group { display: flex; flex-direction: column; gap: 0.4rem; }
   .input-group label {
@@ -314,6 +239,7 @@
     transition: opacity 0.15s, transform 0.1s;
   }
   .btn-primary:active { opacity: 0.85; transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
   .divider {
     display: flex; align-items: center; gap: 0.75rem;
@@ -332,7 +258,6 @@
   }
   .btn-google:hover { background: var(--surface-hover); }
 
-  /* Mobile topbar */
   .topbar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 1.25rem 0.5rem;
@@ -423,7 +348,6 @@
   .stat-mini-val { font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; }
   .stat-mini-lbl { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 
-  /* Mobile overlay + sidemenu */
   .overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.45); z-index: 100;
@@ -459,7 +383,6 @@
   .side-footer { padding: 1rem 1.5rem 0; border-top: 1px solid var(--border); }
   .nav-item.logout { color: #ff7070; }
 
-  /* Module screens */
   .module-screen { flex: 1; padding: 0 1.25rem 5rem; }
 
   .section-header {
@@ -537,7 +460,6 @@
   .cuenta-footer { display: flex; justify-content: space-between; align-items: center; }
   .cuenta-amount { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; }
 
-  /* Bottom nav (mobile only) */
   .bottom-nav {
     position: fixed; bottom: 0; left: 50%;
     transform: translateX(-50%);
@@ -559,14 +481,13 @@
   .nav-btn.active { color: var(--white); }
   .nav-btn svg { width: 22px; height: 22px; }
 
-  /* Toast */
   .alert-toast {
     position: fixed; top: 1rem; left: 50%;
     transform: translateX(-50%) translateY(-80px);
     background: rgba(20,50,100,0.95); backdrop-filter: blur(12px);
     border: 1px solid var(--border); border-radius: var(--radius-sm);
     padding: 0.75rem 1.25rem; font-size: 13px; font-weight: 500;
-    z-index: 300; white-space: nowrap; transition: transform 0.25s ease;
+    z-index: 10000; white-space: nowrap; transition: transform 0.25s ease;
     display: flex; align-items: center; gap: 0.5rem;
     max-width: calc(100% - 2rem);
   }
@@ -577,7 +498,6 @@
   .alert-toast-icon { display: flex; align-items: center; justify-content: center; }
   .alert-toast-icon svg { width: 16px; height: 16px; }
 
-  /* Profile */
   .profile-card {
     background: var(--card-bg); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 1.5rem;
@@ -611,7 +531,6 @@
   }
   .btn-edit svg { width: 16px; height: 16px; }
 
-  /* Users */
   .user-item {
     background: var(--card-bg); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 0.85rem 1rem;
@@ -640,7 +559,6 @@
   }
   .toggle.on::after { left: 18px; }
 
-  /* Modals */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.55); z-index: 200;
@@ -684,14 +602,6 @@
     cursor: pointer; text-align: center; transition: all 0.15s;
   }
   .tipo-btn.active { background: rgba(255,255,255,0.2); color: var(--white); border-color: rgba(255,255,255,0.45); }
-  .upload-area {
-    border: 2px dashed var(--border); border-radius: var(--radius-sm);
-    padding: 1.25rem; text-align: center; font-size: 13px; color: var(--text-muted);
-    cursor: pointer; transition: border-color 0.2s;
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  }
-  .upload-area:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
-  .upload-icon svg { width: 24px; height: 24px; }
   .form-actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
   .btn-cancel {
     flex: 1; background: rgba(255,255,255,0.08); border: 1.5px solid var(--border);
@@ -711,89 +621,40 @@
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
 
   /* ══════════════════════════════════════════
-     RESPONSIVE BREAKPOINT — DESKTOP (≥768px)
+     DESKTOP ≥768px
   ══════════════════════════════════════════ */
   @media (min-width: 768px) {
     .mobile-only { display: none !important; }
     .desktop-only { display: flex !important; }
 
-    body { display: block; }
-
     .app-shell { flex-direction: row; }
-
-    /* Show desktop sidebar */
     .desktop-sidebar { display: flex; }
-
-    /* Main area shifts right */
     .main-area { margin-left: var(--sidebar-w); }
-
-    /* Show desktop topbar */
     .desktop-topbar { display: flex; }
 
-    /* Screens become full-width, no min-height, no column layout trick */
-    .screen {
-      min-height: auto;
-      flex: 1;
-    }
-    .screen.active {
-      display: block;
-    }
-    /* Login screen centered on desktop */
-    #screen-login.active {
-      display: flex;
-      min-height: 100vh;
-      justify-content: center;
-      align-items: center;
-    }
+    .screen { min-height: auto; flex: 1; }
+    .screen.active { display: block; }
 
-    /* Home screen on desktop */
-    .home-content {
-      padding: 0;
-      max-width: none;
-    }
-
-    /* Hide mobile nav elements */
+    .home-content { padding: 0; max-width: none; }
     .topbar { display: none; }
     .bottom-nav { display: none; }
+    .module-screen { padding: 0; }
+    .screen-content-desktop { padding: 1.75rem 2rem 2rem; }
 
-    /* Module screen padding */
-    .module-screen {
-      padding: 0;
-    }
-
-    /* Desktop content wrapper for all screens */
-    .screen-content-desktop {
-      padding: 1.75rem 2rem 2rem;
-    }
-
-    /* Larger balance on desktop */
     .balance-amount { font-size: 52px; }
-
-    /* Wider chart */
     .chart-wrap { height: 180px; }
-
-    /* Desktop module grid → 4 columns */
     .modules-grid { grid-template-columns: repeat(4, 1fr); }
-
-    /* Desktop stats row */
     .stats-row { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     .stat-mini { padding: 1rem 1.25rem; }
     .stat-mini-val { font-size: 20px; }
     .stat-mini-lbl { font-size: 12px; }
-
-    /* TX list items bigger */
     .tx-item { padding: 1rem 1.25rem; }
     .tx-name { font-size: 14px; }
     .tx-amount { font-size: 15px; }
-
-    /* Section headers */
     .section-header { margin: 0 0 1rem; }
     .section-title { font-size: 18px; }
-
-    /* Cuentas */
     .cuenta-item { padding: 1.1rem 1.25rem; }
 
-    /* Two-column layout for tx screens */
     .desktop-tx-layout {
       display: grid;
       grid-template-columns: 1fr 340px;
@@ -801,15 +662,12 @@
       align-items: start;
     }
 
-    /* Desktop wide modals center */
     .modal-sheet {
       border-radius: var(--radius);
       margin-bottom: 0;
       align-self: center;
     }
-    .modal-overlay.open {
-      align-items: center;
-    }
+    .modal-overlay.open { align-items: center; }
   }
 
   @media (min-width: 1100px) {
@@ -827,7 +685,38 @@
   <span id="toast-msg">Registro realizado exitosamente</span>
 </div>
 
-<!-- Mobile overlay + side menu -->
+<!-- ══════════════════════════════════════════
+     LOGIN OVERLAY — cubre toda la pantalla
+════════════════════════════════════════════ -->
+<div id="login-overlay">
+  <div class="login-wrap">
+    <div class="login-logo-area">
+      <img src="LogoPB.png" style="width:120px;height:120px;object-fit:contain" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'">
+      <span class="logo-name" id="logo-fallback" style="display:none">Petro<span>Balance</span></span>
+    </div>
+    <div class="login-card">
+      <h2>Bienvenido</h2>
+      <div id="login-error" class="login-error">Usuario o contraseña incorrectos</div>
+      <div class="input-group">
+        <label>Usuario / Email</label>
+        <input type="text" placeholder="usuario@topser.com" id="login-user" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="input-group">
+        <label>Contraseña</label>
+        <input type="password" placeholder="••••••••" id="login-pass" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="forgot">¿Olvidaste tu contraseña?</div>
+      <button class="btn-primary" id="login-btn" onclick="doLogin()">Iniciar sesión</button>
+      <div class="divider">o inicia sesión con</div>
+      <button class="btn-google" onclick="doLoginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continuar con Google
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile overlay + side menu (solo visible tras login) -->
 <div class="overlay mobile-only" id="overlay" onclick="closeSideMenu()"></div>
 
 <nav class="side-menu mobile-only" id="sideMenu">
@@ -857,16 +746,16 @@
     </div>
   </div>
   <div class="side-footer">
-    <div class="nav-item logout" onclick="goTo('login'); closeSideMenu()">
+    <div class="nav-item logout" onclick="doLogout(); closeSideMenu()">
       <span class="nav-item-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Cerrar sesión
     </div>
   </div>
 </nav>
 
-<!-- Desktop Sidebar -->
+<!-- App Shell -->
 <div class="app-shell">
   <aside class="desktop-sidebar desktop-only">
-    <div class="side-header" style="border-bottom:1px solid var(--border); padding:1.25rem 1.25rem 1rem; flex-direction:row; align-items:center; gap:0.75rem;">
+    <div class="side-header" style="border-bottom:1px solid var(--border);padding:1.25rem 1.25rem 1rem;flex-direction:row;align-items:center;gap:0.75rem;">
       <img src="LogoPB.png" style="width:36px;height:36px;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'">
       <span class="logo-text">Petro<span>Balance</span></span>
     </div>
@@ -902,16 +791,13 @@
       </div>
     </div>
     <div class="side-footer">
-      <div class="nav-item logout" onclick="goTo('login')">
+      <div class="nav-item logout" onclick="doLogout()">
         <svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Cerrar sesión
       </div>
     </div>
   </aside>
 
-  <!-- Main area -->
   <div class="main-area">
-
-    <!-- Desktop topbar (inside main-area, shifts with sidebar) -->
     <header class="desktop-topbar desktop-only" id="desktopTopbar">
       <div class="desktop-topbar-left">
         <span class="desktop-topbar-title" id="desktopPageTitle">Inicio</span>
@@ -928,37 +814,8 @@
       </div>
     </header>
 
-    <!-- ── LOGIN ── -->
-    <div class="screen login-screen active" id="screen-login">
-      <div class="logo-area">
-        <div class="logo-icon">
-          <img src="LogoPB.png" style="width:140px;height:140px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-          <span class="logo-name" style="display:none">Petro<span>Balance</span></span>
-        </div>
-      </div>
-      <div class="login-card">
-        <h2>Bienvenido</h2>
-        <div class="input-group">
-          <label>Usuario / Email</label>
-          <input type="text" placeholder="usuario@topser.com" id="login-user">
-        </div>
-        <div class="input-group">
-          <label>Contraseña</label>
-          <input type="password" placeholder="••••••••" id="login-pass">
-        </div>
-        <div class="forgot">¿Olvidaste tu contraseña?</div>
-        <button class="btn-primary" onclick="doLogin()">Iniciar sesión</button>
-        <div class="divider">o inicia sesión con</div>
-        <button class="btn-google">
-          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-          Continuar con Google
-        </button>
-      </div>
-    </div>
-
-    <!-- ── HOME ── -->
-    <div class="screen" id="screen-home">
-      <!-- Mobile topbar -->
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
       <div class="topbar mobile-only">
         <div class="topbar-left">
           <button class="menu-btn" onclick="openSideMenu()"><span></span><span></span><span></span></button>
@@ -969,9 +826,7 @@
           <span class="notif-dot"></span>
         </div>
       </div>
-
       <div class="home-content screen-content-desktop">
-        <!-- Balance -->
         <div class="balance-section">
           <div class="balance-greeting">Balance general</div>
           <div class="balance-amount">$100.65</div>
@@ -980,24 +835,11 @@
             <span class="delta-neg">▼ -$1,149.35</span>
           </div>
         </div>
-
-        <!-- Stats -->
         <div class="stats-row" style="margin-top:1rem">
-          <div class="stat-mini">
-            <div class="stat-mini-val" style="color:#5be87c">S/4,200</div>
-            <div class="stat-mini-lbl">Ingresos</div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-val" style="color:#ff7070">S/3,890</div>
-            <div class="stat-mini-lbl">Egresos</div>
-          </div>
-          <div class="stat-mini">
-            <div class="stat-mini-val" style="color:#ffd166">3</div>
-            <div class="stat-mini-lbl">Pendientes</div>
-          </div>
+          <div class="stat-mini"><div class="stat-mini-val" style="color:#5be87c">S/4,200</div><div class="stat-mini-lbl">Ingresos</div></div>
+          <div class="stat-mini"><div class="stat-mini-val" style="color:#ff7070">S/3,890</div><div class="stat-mini-lbl">Egresos</div></div>
+          <div class="stat-mini"><div class="stat-mini-val" style="color:#ffd166">3</div><div class="stat-mini-lbl">Pendientes</div></div>
         </div>
-
-        <!-- Chart -->
         <div class="chart-wrap">
           <svg class="chart-svg" viewBox="0 0 340 100" preserveAspectRatio="none">
             <defs>
@@ -1021,8 +863,6 @@
           <div class="period-tab" onclick="setPeriod(this,'M')">Mensual</div>
           <div class="period-tab" onclick="setPeriod(this,'A')">Anual</div>
         </div>
-
-        <!-- Module cards -->
         <div class="modules-title">Módulos</div>
         <div class="modules-grid">
           <div class="module-card ingresos" onclick="goTo('ingresos')">
@@ -1047,25 +887,15 @@
           </div>
         </div>
       </div>
-
-      <!-- Mobile bottom nav -->
       <nav class="bottom-nav mobile-only">
-        <button class="nav-btn active" onclick="goTo('home')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Inicio
-        </button>
-        <button class="nav-btn" onclick="goTo('ingresos')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg> Ingresos
-        </button>
-        <button class="nav-btn" onclick="goTo('gastos')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg> Gastos
-        </button>
-        <button class="nav-btn" onclick="goTo('cuentas')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Cuentas
-        </button>
+        <button class="nav-btn active" onclick="goTo('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Inicio</button>
+        <button class="nav-btn" onclick="goTo('ingresos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 5 5 12"/></svg> Ingresos</button>
+        <button class="nav-btn" onclick="goTo('gastos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 19 19 12"/></svg> Gastos</button>
+        <button class="nav-btn" onclick="goTo('cuentas')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Cuentas</button>
       </nav>
     </div>
 
-    <!-- ── INGRESOS ── -->
+    <!-- INGRESOS -->
     <div class="screen" id="screen-ingresos">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1088,44 +918,17 @@
         </div>
         <div class="desktop-tx-layout">
           <div class="tx-list">
-            <div class="tx-item">
-              <div class="tx-icon green"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Olympic — Factura F001-2341</div><div class="tx-meta">Venta · 28/05/2026</div></div>
-              <div class="tx-amount pos">+$850.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon blue"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Cheque N° 00142 — BCP</div><div class="tx-meta">Cheque cobrado · 26/05/2026</div></div>
-              <div class="tx-amount pos">+$400.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon green"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Energía S.A. — Factura F001-2298</div><div class="tx-meta">Venta · 22/05/2026</div></div>
-              <div class="tx-amount pos">+S/. 1,200.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon amber"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Factoring — Contrato FC-0034</div><div class="tx-meta">Factoring · 18/05/2026</div></div>
-              <div class="tx-amount pos">+$600.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon blue"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Crédito BBVA — CR-0012</div><div class="tx-meta">Crédito recibido · 15/05/2026</div></div>
-              <div class="tx-amount pos">+S/. 3,500.00</div>
-            </div>
-            <div class="total-bar">
-              <span class="total-bar-label">TOTAL INGRESOS</span>
-              <span class="total-bar-value" style="color:#5be87c">+$4,200.00</span>
-            </div>
+            <div class="tx-item"><div class="tx-icon green"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="tx-info"><div class="tx-name">Olympic — Factura F001-2341</div><div class="tx-meta">Venta · 28/05/2026</div></div><div class="tx-amount pos">+$850.00</div></div>
+            <div class="tx-item"><div class="tx-icon blue"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="tx-info"><div class="tx-name">Cheque N° 00142 — BCP</div><div class="tx-meta">Cheque cobrado · 26/05/2026</div></div><div class="tx-amount pos">+$400.00</div></div>
+            <div class="tx-item"><div class="tx-icon green"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="tx-info"><div class="tx-name">Energía S.A. — Factura F001-2298</div><div class="tx-meta">Venta · 22/05/2026</div></div><div class="tx-amount pos">+S/. 1,200.00</div></div>
+            <div class="tx-item"><div class="tx-icon amber"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="tx-info"><div class="tx-name">Factoring — Contrato FC-0034</div><div class="tx-meta">Factoring · 18/05/2026</div></div><div class="tx-amount pos">+$600.00</div></div>
+            <div class="tx-item"><div class="tx-icon blue"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="tx-info"><div class="tx-name">Crédito BBVA — CR-0012</div><div class="tx-meta">Crédito recibido · 15/05/2026</div></div><div class="tx-amount pos">+S/. 3,500.00</div></div>
+            <div class="total-bar"><span class="total-bar-label">TOTAL INGRESOS</span><span class="total-bar-value" style="color:#5be87c">+$4,200.00</span></div>
           </div>
-          <!-- Desktop summary panel -->
           <div class="desktop-only" style="display:flex;flex-direction:column;gap:1rem;">
             <div class="cuenta-item">
               <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:0.5rem">Resumen del mes</div>
-              <div class="stat-mini" style="text-align:left;padding:0.5rem 0;background:none;border:none;border-bottom:1px solid var(--border);border-radius:0">
-                <div class="stat-mini-val" style="color:#5be87c;font-size:22px">+$4,200.00</div>
-                <div class="stat-mini-lbl">Total ingresos Mayo 2026</div>
-              </div>
+              <div class="stat-mini" style="text-align:left;padding:0.5rem 0;background:none;border:none;border-bottom:1px solid var(--border);border-radius:0"><div class="stat-mini-val" style="color:#5be87c;font-size:22px">+$4,200.00</div><div class="stat-mini-lbl">Total ingresos Mayo 2026</div></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.75rem">
                 <div class="stat-mini"><div class="stat-mini-val">3</div><div class="stat-mini-lbl">Ventas</div></div>
                 <div class="stat-mini"><div class="stat-mini-val">1</div><div class="stat-mini-lbl">Cheques</div></div>
@@ -1147,7 +950,7 @@
       </nav>
     </div>
 
-    <!-- ── GASTOS ── -->
+    <!-- GASTOS -->
     <div class="screen" id="screen-gastos">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1170,44 +973,17 @@
         </div>
         <div class="desktop-tx-layout">
           <div class="tx-list">
-            <div class="tx-item">
-              <div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Repuestos Talara S.A.C.</div><div class="tx-meta">Factura F002-0891 · 29/05/2026</div></div>
-              <div class="tx-amount neg">-$320.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon amber"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Combustible campo norte</div><div class="tx-meta">Sin comprobante · 28/05/2026</div></div>
-              <div class="tx-amount neg">-S/. 180.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Cheque N° 00078 — Scotiabank</div><div class="tx-meta">Cheque emitido · 25/05/2026</div></div>
-              <div class="tx-amount neg">-$500.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Pago cuota BBVA — CR-0012</div><div class="tx-meta">Gasto financiero · 20/05/2026</div></div>
-              <div class="tx-amount neg">-S/. 450.00</div>
-            </div>
-            <div class="tx-item">
-              <div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-              <div class="tx-info"><div class="tx-name">Insumos de limpieza</div><div class="tx-meta">Boleta B001-3421 · 15/05/2026</div></div>
-              <div class="tx-amount neg">-S/. 89.50</div>
-            </div>
-            <div class="total-bar">
-              <span class="total-bar-label">TOTAL EGRESOS</span>
-              <span class="total-bar-value" style="color:#ff7070">-S/. 3,890.00</span>
-            </div>
+            <div class="tx-item"><div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="tx-info"><div class="tx-name">Repuestos Talara S.A.C.</div><div class="tx-meta">Factura F002-0891 · 29/05/2026</div></div><div class="tx-amount neg">-$320.00</div></div>
+            <div class="tx-item"><div class="tx-icon amber"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="tx-info"><div class="tx-name">Combustible campo norte</div><div class="tx-meta">Sin comprobante · 28/05/2026</div></div><div class="tx-amount neg">-S/. 180.00</div></div>
+            <div class="tx-item"><div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="tx-info"><div class="tx-name">Cheque N° 00078 — Scotiabank</div><div class="tx-meta">Cheque emitido · 25/05/2026</div></div><div class="tx-amount neg">-$500.00</div></div>
+            <div class="tx-item"><div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="tx-info"><div class="tx-name">Pago cuota BBVA — CR-0012</div><div class="tx-meta">Gasto financiero · 20/05/2026</div></div><div class="tx-amount neg">-S/. 450.00</div></div>
+            <div class="tx-item"><div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="tx-info"><div class="tx-name">Insumos de limpieza</div><div class="tx-meta">Boleta B001-3421 · 15/05/2026</div></div><div class="tx-amount neg">-S/. 89.50</div></div>
+            <div class="total-bar"><span class="total-bar-label">TOTAL EGRESOS</span><span class="total-bar-value" style="color:#ff7070">-S/. 3,890.00</span></div>
           </div>
-          <!-- Desktop summary panel -->
           <div class="desktop-only" style="display:flex;flex-direction:column;gap:1rem;">
             <div class="cuenta-item">
               <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:0.5rem">Resumen del mes</div>
-              <div class="stat-mini" style="text-align:left;padding:0.5rem 0;background:none;border:none;border-bottom:1px solid var(--border);border-radius:0">
-                <div class="stat-mini-val" style="color:#ff7070;font-size:22px">-S/. 3,890.00</div>
-                <div class="stat-mini-lbl">Total egresos Mayo 2026</div>
-              </div>
+              <div class="stat-mini" style="text-align:left;padding:0.5rem 0;background:none;border:none;border-bottom:1px solid var(--border);border-radius:0"><div class="stat-mini-val" style="color:#ff7070;font-size:22px">-S/. 3,890.00</div><div class="stat-mini-lbl">Total egresos Mayo 2026</div></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.75rem">
                 <div class="stat-mini"><div class="stat-mini-val">2</div><div class="stat-mini-lbl">Facturas</div></div>
                 <div class="stat-mini"><div class="stat-mini-val">1</div><div class="stat-mini-lbl">Sin comprobante</div></div>
@@ -1229,7 +1005,7 @@
       </nav>
     </div>
 
-    <!-- ── REGISTROS ── -->
+    <!-- REGISTROS -->
     <div class="screen" id="screen-registros">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1253,9 +1029,7 @@
               </div>
               <button class="btn-save" style="width:100%;margin-top:0.65rem;border-radius:var(--radius-sm);font-size:13px" onclick="showToast('Filtro aplicado','success','check')">Aplicar filtro</button>
             </div>
-            <div class="section-header">
-              <span class="section-title" id="registros-titulo">Todos los movimientos</span>
-            </div>
+            <div class="section-header"><span class="section-title" id="registros-titulo">Todos los movimientos</span></div>
             <div class="tx-list" id="registros-lista">
               <div class="tx-item reg-item reg-ingresos"><div class="tx-icon green"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="tx-info"><div class="tx-name">Olympic — Factura F001-2341</div><div class="tx-meta">Venta · 28/05/2026</div></div><div class="tx-amount pos">+$850.00</div></div>
               <div class="tx-item reg-item reg-ingresos"><div class="tx-icon blue"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="tx-info"><div class="tx-name">Factoring — Contrato FC-0034</div><div class="tx-meta">Factoring · 18/05/2026</div></div><div class="tx-amount pos">+$600.00</div></div>
@@ -1266,12 +1040,8 @@
               <div class="tx-item reg-item reg-egresos reg-cheques"><div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="tx-info"><div class="tx-name">Cheque N° 00078 — Scotiabank</div><div class="tx-meta">Cheque emitido · 25/05/2026</div></div><div class="tx-amount neg">-$500.00</div></div>
               <div class="tx-item reg-item reg-egresos"><div class="tx-icon red"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="tx-info"><div class="tx-name">Pago cuota BBVA — CR-0012</div><div class="tx-meta">Gasto financiero · 20/05/2026</div></div><div class="tx-amount neg">-S/. 450.00</div></div>
             </div>
-            <div class="total-bar" id="registros-total">
-              <span class="total-bar-label">TOTAL</span>
-              <span class="total-bar-value" style="color:#5be87c" id="registros-total-val">Ver por filtro</span>
-            </div>
+            <div class="total-bar"><span class="total-bar-label">TOTAL</span><span class="total-bar-value" style="color:#5be87c" id="registros-total-val">Ver por filtro</span></div>
           </div>
-          <!-- Export panel -->
           <div style="display:flex;flex-direction:column;gap:1rem;">
             <div class="cuenta-item">
               <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:0.75rem">Formato de exportación</div>
@@ -1293,7 +1063,7 @@
       </nav>
     </div>
 
-    <!-- ── CUENTAS ── -->
+    <!-- CUENTAS -->
     <div class="screen" id="screen-cuentas">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1314,32 +1084,11 @@
         </div>
         <div class="desktop-tx-layout">
           <div>
-            <div class="cuenta-item">
-              <div class="cuenta-header"><span class="cuenta-name">Crédito BBVA — CR-0012</span><span class="status-badge pendiente">Pendiente</span></div>
-              <div class="cuenta-meta">Vence: 15/06/2026 · Cuota mensual</div>
-              <div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:40%;background:#ffc107"></div></div>
-              <div class="cuenta-footer"><span class="cuenta-amount" style="color:#ffd166">S/. 3,150.00 restante</span><button class="btn-add" onclick="showToast('Abono registrado','success','check')" style="padding:0.3rem 0.7rem;font-size:12px">Abonar</button></div>
-            </div>
-            <div class="cuenta-item">
-              <div class="cuenta-header"><span class="cuenta-name">Cheque #00143 — Energía S.A.</span><span class="status-badge pendiente">Pendiente</span></div>
-              <div class="cuenta-meta">Emisión: 15/05/2026 · Por cobrar</div>
-              <div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:0%;background:#ffc107"></div></div>
-              <div class="cuenta-footer"><span class="cuenta-amount" style="color:#ffd166">$750.00 pendiente</span><button class="btn-add" onclick="showToast('Estado actualizado','success','check')" style="padding:0.3rem 0.7rem;font-size:12px">Actualizar</button></div>
-            </div>
-            <div class="cuenta-item">
-              <div class="cuenta-header"><span class="cuenta-name">Proveedor Martinez — Factura</span><span class="status-badge retrasado">Retrasado</span></div>
-              <div class="cuenta-meta">Venció: 01/05/2026 · 30 días de retraso</div>
-              <div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:100%;background:#dc3545"></div></div>
-              <div class="cuenta-footer"><span class="cuenta-amount" style="color:#ff7070">$220.00 vencido</span><button class="btn-add" onclick="showToast('Abono registrado','success','check')" style="padding:0.3rem 0.7rem;font-size:12px">Abonar</button></div>
-            </div>
-            <div class="cuenta-item">
-              <div class="cuenta-header"><span class="cuenta-name">Olympic — Factura F001-2298</span><span class="status-badge pagado">Pagado</span></div>
-              <div class="cuenta-meta">Pagado: 22/05/2026 · Completo</div>
-              <div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:100%;background:#28a745"></div></div>
-              <div class="cuenta-footer"><span class="cuenta-amount" style="color:#5be87c">S/. 1,200.00 cobrado</span><span style="font-size:11px;color:var(--text-muted)">Completado ✓</span></div>
-            </div>
+            <div class="cuenta-item"><div class="cuenta-header"><span class="cuenta-name">Crédito BBVA — CR-0012</span><span class="status-badge pendiente">Pendiente</span></div><div class="cuenta-meta">Vence: 15/06/2026 · Cuota mensual</div><div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:40%;background:#ffc107"></div></div><div class="cuenta-footer"><span class="cuenta-amount" style="color:#ffd166">S/. 3,150.00 restante</span><button class="btn-add" onclick="showToast('Abono registrado','success','check')" style="padding:0.3rem 0.7rem;font-size:12px">Abonar</button></div></div>
+            <div class="cuenta-item"><div class="cuenta-header"><span class="cuenta-name">Cheque #00143 — Energía S.A.</span><span class="status-badge pendiente">Pendiente</span></div><div class="cuenta-meta">Emisión: 15/05/2026 · Por cobrar</div><div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:0%;background:#ffc107"></div></div><div class="cuenta-footer"><span class="cuenta-amount" style="color:#ffd166">$750.00 pendiente</span><button class="btn-add" onclick="showToast('Estado actualizado','success','check')" style="padding:0.3rem 0.7rem;font-size:12px">Actualizar</button></div></div>
+            <div class="cuenta-item"><div class="cuenta-header"><span class="cuenta-name">Proveedor Martinez — Factura</span><span class="status-badge retrasado">Retrasado</span></div><div class="cuenta-meta">Venció: 01/05/2026 · 30 días de retraso</div><div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:100%;background:#dc3545"></div></div><div class="cuenta-footer"><span class="cuenta-amount" style="color:#ff7070">$220.00 vencido</span><button class="btn-add" onclick="showToast('Abono registrado','success','check')" style="padding:0.3rem 0.7rem;font-size:12px">Abonar</button></div></div>
+            <div class="cuenta-item"><div class="cuenta-header"><span class="cuenta-name">Olympic — Factura F001-2298</span><span class="status-badge pagado">Pagado</span></div><div class="cuenta-meta">Pagado: 22/05/2026 · Completo</div><div class="cuenta-progress"><div class="cuenta-progress-bar" style="width:100%;background:#28a745"></div></div><div class="cuenta-footer"><span class="cuenta-amount" style="color:#5be87c">S/. 1,200.00 cobrado</span><span style="font-size:11px;color:var(--text-muted)">Completado ✓</span></div></div>
           </div>
-          <!-- Summary panel -->
           <div class="desktop-only" style="display:flex;flex-direction:column;gap:1rem;">
             <div class="cuenta-item">
               <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:0.75rem">Resumen de cuentas</div>
@@ -1358,7 +1107,7 @@
       </nav>
     </div>
 
-    <!-- ── PERFIL ── -->
+    <!-- PERFIL -->
     <div class="screen" id="screen-perfil">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1381,18 +1130,12 @@
             </div>
           </div>
         </div>
-        <button class="btn-edit" onclick="showToast('Modo edición activado','warning','edit')">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Editar perfil
-        </button>
-        <button class="btn-edit" style="margin-top:0.5rem;color:rgba(255,255,255,0.5)" onclick="showToast('Cambio de contraseña','warning','key')">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-          Cambiar contraseña
-        </button>
+        <button class="btn-edit" onclick="showToast('Modo edición activado','warning','edit')"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar perfil</button>
+        <button class="btn-edit" style="margin-top:0.5rem;color:rgba(255,255,255,0.5)" onclick="showToast('Cambio de contraseña','warning','key')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Cambiar contraseña</button>
       </div>
     </div>
 
-    <!-- ── USUARIOS ── -->
+    <!-- USUARIOS -->
     <div class="screen" id="screen-usuarios">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1402,9 +1145,7 @@
       <div class="module-screen screen-content-desktop">
         <div class="section-header">
           <span class="section-title">Activos en la aplicación</span>
-          <button class="btn-add" onclick="openModal('modalUsuario')">
-            <svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Nuevo
-          </button>
+          <button class="btn-add" onclick="openModal('modalUsuario')"><svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Nuevo</button>
         </div>
         <div style="font-size:11px;color:var(--text-muted);margin-bottom:0.75rem">Límite: 5 usuarios (3 administradores + 2 contadores)</div>
         <div class="user-item"><div class="user-avatar-sm">CA</div><div class="user-info"><div class="user-name">Carlos Angelo</div><div class="user-role">Administrador</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
@@ -1416,7 +1157,7 @@
       </div>
     </div>
 
-    <!-- ── NOTIFICACIONES ── -->
+    <!-- NOTIFICACIONES -->
     <div class="screen" id="screen-notificaciones">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1433,7 +1174,7 @@
       </div>
     </div>
 
-    <!-- ── AJUSTES ── -->
+    <!-- AJUSTES -->
     <div class="screen" id="screen-ajustes">
       <div class="topbar mobile-only">
         <button class="back-btn" onclick="goTo('home')"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver</button>
@@ -1461,31 +1202,20 @@
         <div class="cuenta-item">
           <div class="cuenta-header"><span class="cuenta-name">Categorías de pago</span></div>
           <div class="cuenta-meta">Materiales · Transporte · Alimentación · Servicios · Otros</div>
-          <button class="btn-edit" style="margin-top:0.5rem" onclick="showToast('Gestión de categorías','warning','settings')">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Gestionar categorías
-          </button>
+          <button class="btn-edit" style="margin-top:0.5rem" onclick="showToast('Gestión de categorías','warning','settings')"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Gestionar categorías</button>
         </div>
         <div class="cuenta-item">
           <div class="cuenta-header"><span class="cuenta-name">Copia de seguridad</span><span class="status-badge pagado">Automática</span></div>
           <div class="cuenta-meta">Última copia: hoy 04:00 a.m. · Google Drive</div>
-          <button class="btn-edit" style="margin-top:0.5rem" onclick="showToast('Copia de seguridad iniciada','success','check')">
-            <svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
-            Generar copia ahora
-          </button>
+          <button class="btn-edit" style="margin-top:0.5rem" onclick="showToast('Copia de seguridad iniciada','success','check')"><svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Generar copia ahora</button>
         </div>
         <div class="cuenta-item">
           <div class="section-header" style="margin-bottom:0.5rem">
             <div><div class="cuenta-name">Cuentas bancarias</div><div class="cuenta-meta">Bancos disponibles para cheques y pagos</div></div>
-            <button class="btn-add" onclick="openModal('modalBanco')">
-              <svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Nuevo
-            </button>
+            <button class="btn-add" onclick="openModal('modalBanco')"><svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Nuevo</button>
           </div>
           <div id="banco-lista" style="display:flex;flex-direction:column;gap:0.5rem;margin:0.65rem 0"></div>
-          <div class="total-bar" style="margin-top:0.5rem">
-            <span class="total-bar-label">BANCOS REGISTRADOS</span>
-            <span class="total-bar-value" id="banco-count">0 bancos</span>
-          </div>
+          <div class="total-bar" style="margin-top:0.5rem"><span class="total-bar-label">BANCOS REGISTRADOS</span><span class="total-bar-value" id="banco-count">0 bancos</span></div>
         </div>
       </div>
     </div>
@@ -1493,7 +1223,7 @@
   </div><!-- /main-area -->
 </div><!-- /app-shell -->
 
-<!-- ── MODALES ── -->
+<!-- MODALES -->
 <div class="modal-overlay" id="modalIngreso">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -1508,59 +1238,26 @@
     <div id="campos-venta">
       <div class="form-group"><label class="form-label">N° Factura / Boleta</label><input class="form-input" type="text" placeholder="F001-0000"></div>
       <div class="form-group"><label class="form-label">RUC del cliente</label><input class="form-input" type="text" placeholder="20xxxxxxxxx"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tipo de cambio</label><input class="form-input" type="number" placeholder="3.75"></div>
-        <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date"></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Tipo de cambio</label><input class="form-input" type="number" placeholder="3.75"></div><div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date"></div></div>
     </div>
     <div id="campos-cheque" style="display:none">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">N° Correlativo</label><input class="form-input" type="text" placeholder="00144"></div>
-        <div class="form-group"><label class="form-label">Banco emisor</label><select class="form-select"><option>BCP</option><option>BBVA</option><option>Scotiabank</option><option>Interbank</option></select></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">N° Correlativo</label><input class="form-input" type="text" placeholder="00144"></div><div class="form-group"><label class="form-label">Banco emisor</label><select class="form-select"><option>BCP</option><option>BBVA</option><option>Scotiabank</option><option>Interbank</option></select></div></div>
       <div class="form-group"><label class="form-label">Librador</label><input class="form-input" type="text" placeholder="Nombre o empresa"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Fecha de emisión</label><input class="form-input" type="date"></div>
-        <div class="form-group"><label class="form-label">Fecha de cobro</label><input class="form-input" type="date"></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Fecha de emisión</label><input class="form-input" type="date"></div><div class="form-group"><label class="form-label">Fecha de cobro</label><input class="form-input" type="date"></div></div>
       <div class="form-group"><label class="form-label">Estado</label><select class="form-select"><option>Pendiente</option><option>Cobrado</option><option>Anulado</option></select></div>
     </div>
     <div id="campos-factoring" style="display:none">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">ID Contrato</label><input class="form-input" type="text" placeholder="FC-0000"></div>
-        <div class="form-group"><label class="form-label">ID Factor</label><input class="form-input" type="text" placeholder="FAC-000"></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">ID Contrato</label><input class="form-input" type="text" placeholder="FC-0000"></div><div class="form-group"><label class="form-label">ID Factor</label><input class="form-input" type="text" placeholder="FAC-000"></div></div>
       <div class="form-group"><label class="form-label">ID Factura asociada</label><input class="form-input" type="text" placeholder="F001-0000"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tipo de cambio</label><input class="form-input" type="number" placeholder="3.75"></div>
-        <div class="form-group"><label class="form-label">Fecha de operación</label><input class="form-input" type="date"></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Tipo de cambio</label><input class="form-input" type="number" placeholder="3.75"></div><div class="form-group"><label class="form-label">Fecha de operación</label><input class="form-input" type="date"></div></div>
     </div>
     <div id="campos-credito" style="display:none">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">ID Crédito</label><input class="form-input" type="text" placeholder="CR-0000"></div>
-        <div class="form-group"><label class="form-label">ID Acreedor</label><input class="form-input" type="text" placeholder="ACR-000"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tipo de cambio</label><input class="form-input" type="number" placeholder="3.75"></div>
-        <div class="form-group"><label class="form-label">Fecha de desembolso</label><input class="form-input" type="date"></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">ID Crédito</label><input class="form-input" type="text" placeholder="CR-0000"></div><div class="form-group"><label class="form-label">ID Acreedor</label><input class="form-input" type="text" placeholder="ACR-000"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Tipo de cambio</label><input class="form-input" type="number" placeholder="3.75"></div><div class="form-group"><label class="form-label">Fecha de desembolso</label><input class="form-input" type="date"></div></div>
     </div>
     <div class="form-actions">
       <button class="btn-cancel" onclick="closeModal('modalIngreso')">Cancelar</button>
@@ -1574,19 +1271,10 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-banco-titulo">Registrar banco</div>
     <input type="hidden" id="banco-edit-index" value="-1">
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Nombre del banco</label><input class="form-input" type="text" id="banco-nombre" placeholder="Ej: BCP"></div>
-      <div class="form-group"><label class="form-label">Moneda</label><select class="form-select" id="banco-moneda"><option value="USD">USD ($)</option><option value="PEN">PEN (S/.)</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">N° de cuenta</label><input class="form-input" type="text" id="banco-cuenta" placeholder="000-000000-0-00"></div>
-      <div class="form-group"><label class="form-label">Tipo de cuenta</label><select class="form-select" id="banco-tipo"><option>Cta. Corriente</option><option>Cta. Ahorros</option><option>Cta. Detracciones</option></select></div>
-    </div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Nombre del banco</label><input class="form-input" type="text" id="banco-nombre" placeholder="Ej: BCP"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select" id="banco-moneda"><option value="USD">USD ($)</option><option value="PEN">PEN (S/.)</option></select></div></div>
+    <div class="form-row"><div class="form-group"><label class="form-label">N° de cuenta</label><input class="form-input" type="text" id="banco-cuenta" placeholder="000-000000-0-00"></div><div class="form-group"><label class="form-label">Tipo de cuenta</label><select class="form-select" id="banco-tipo"><option>Cta. Corriente</option><option>Cta. Ahorros</option><option>Cta. Detracciones</option></select></div></div>
     <div class="form-group"><label class="form-label">Descripción (opcional)</label><input class="form-input" type="text" id="banco-descripcion" placeholder="Ej: Cuenta principal de pagos"></div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="cerrarModalBanco()">Cancelar</button>
-      <button class="btn-save" onclick="guardarBanco()">Guardar banco</button>
-    </div>
+    <div class="form-actions"><button class="btn-cancel" onclick="cerrarModalBanco()">Cancelar</button><button class="btn-save" onclick="guardarBanco()">Guardar banco</button></div>
   </div>
 </div>
 
@@ -1604,61 +1292,16 @@
     </div>
     <div id="gcampos-factura">
       <div class="form-group"><label class="form-label">N° Factura</label><input class="form-input" type="text" placeholder="F002-0000"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">RUC Proveedor</label><input class="form-input" type="text" placeholder="20xxxxxxxxx"></div>
-        <div class="form-group"><label class="form-label">Razón social</label><input class="form-input" type="text" placeholder="Empresa S.A.C."></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">RUC Proveedor</label><input class="form-input" type="text" placeholder="20xxxxxxxxx"></div><div class="form-group"><label class="form-label">Razón social</label><input class="form-input" type="text" placeholder="Empresa S.A.C."></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div>
       <div class="form-group"><label class="form-label">Categoría</label><select class="form-select"><option>Materiales</option><option>Transporte</option><option>Alimentación</option><option>Servicios</option><option>Otros</option></select></div>
       <div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div>
     </div>
-    <div id="gcampos-boleta" style="display:none">
-      <div class="form-group"><label class="form-label">N° Boleta</label><input class="form-input" type="text" placeholder="B001-0000"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div>
-    </div>
-    <div id="gcampos-corriente" style="display:none">
-      <div class="form-group"><label class="form-label">Descripción del gasto</label><input class="form-input" type="text" placeholder="Ej: Combustible campo norte"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div>
-    </div>
-    <div id="gcampos-cheque" style="display:none">
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">N° Correlativo</label><input class="form-input" type="text" placeholder="00144"></div>
-        <div class="form-group"><label class="form-label">Banco emisor</label><select class="form-select"><option>BCP</option><option>BBVA</option><option>Scotiabank</option><option>Interbank</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Beneficiario</label><input class="form-input" type="text" placeholder="Nombre o empresa"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Fecha de emisión</label><input class="form-input" type="date"></div>
-        <div class="form-group"><label class="form-label">Fecha de cobro</label><input class="form-input" type="date"></div>
-      </div>
-      <div class="form-group"><label class="form-label">Estado</label><select class="form-select"><option>Pendiente</option><option>Cobrado</option><option>Anulado</option></select></div>
-    </div>
-    <div id="gcampos-financiero" style="display:none">
-      <div class="form-group"><label class="form-label">ID Crédito</label><input class="form-input" type="text" placeholder="CR-0000"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div>
-        <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div>
-    </div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeModal('modalGasto')">Cancelar</button>
-      <button class="btn-save" onclick="saveForm('modalGasto')">Guardar gasto</button>
-    </div>
+    <div id="gcampos-boleta" style="display:none"><div class="form-group"><label class="form-label">N° Boleta</label><input class="form-input" type="text" placeholder="B001-0000"></div><div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div><div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div></div>
+    <div id="gcampos-corriente" style="display:none"><div class="form-group"><label class="form-label">Descripción del gasto</label><input class="form-input" type="text" placeholder="Ej: Combustible campo norte"></div><div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div><div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div></div>
+    <div id="gcampos-cheque" style="display:none"><div class="form-row"><div class="form-group"><label class="form-label">N° Correlativo</label><input class="form-input" type="text" placeholder="00144"></div><div class="form-group"><label class="form-label">Banco emisor</label><select class="form-select"><option>BCP</option><option>BBVA</option><option>Scotiabank</option><option>Interbank</option></select></div></div><div class="form-group"><label class="form-label">Beneficiario</label><input class="form-input" type="text" placeholder="Nombre o empresa"></div><div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Fecha de emisión</label><input class="form-input" type="date"></div><div class="form-group"><label class="form-label">Fecha de cobro</label><input class="form-input" type="date"></div></div><div class="form-group"><label class="form-label">Estado</label><select class="form-select"><option>Pendiente</option><option>Cobrado</option><option>Anulado</option></select></div></div>
+    <div id="gcampos-financiero" style="display:none"><div class="form-group"><label class="form-label">ID Crédito</label><input class="form-input" type="text" placeholder="CR-0000"></div><div class="form-row"><div class="form-group"><label class="form-label">Monto</label><input class="form-input" type="number" placeholder="0.00"></div><div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>USD ($)</option><option>PEN (S/.)</option></select></div></div><div class="form-group"><label class="form-label">Fecha de pago</label><input class="form-input" type="date"></div></div>
+    <div class="form-actions"><button class="btn-cancel" onclick="closeModal('modalGasto')">Cancelar</button><button class="btn-save" onclick="saveForm('modalGasto')">Guardar gasto</button></div>
   </div>
 </div>
 
@@ -1670,47 +1313,95 @@
     <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" type="email" placeholder="correo@topser.com"></div>
     <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" type="password" placeholder="••••••••"></div>
     <div class="form-group"><label class="form-label">Rol</label><select class="form-select"><option>Usuario</option><option>Contador</option><option>Administrador</option></select></div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeModal('modalUsuario')">Cancelar</button>
-      <button class="btn-save" onclick="saveForm('modalUsuario')">Registrar usuario</button>
-    </div>
+    <div class="form-actions"><button class="btn-cancel" onclick="closeModal('modalUsuario')">Cancelar</button><button class="btn-save" onclick="saveForm('modalUsuario')">Registrar usuario</button></div>
   </div>
 </div>
 
 <script>
-  const PAGE_TITLES = {
+  // ══════════════════════════════════════════
+  //  ESTADO DE SESIÓN
+  // ══════════════════════════════════════════
+  var isLoggedIn = false;
+
+  var PAGE_TITLES = {
     home: 'Inicio', ingresos: 'Ingresos', gastos: 'Gastos',
     registros: 'Reportes', cuentas: 'Cuentas pendientes',
     perfil: 'Mi perfil', usuarios: 'Usuarios',
     notificaciones: 'Notificaciones', ajustes: 'Ajustes'
   };
 
+  // Mostrar login al cargar
+  window.addEventListener('load', function() {
+    drawChart('S');
+    renderBancos();
+  });
+
+  function doLogin() {
+    var u = document.getElementById('login-user').value.trim();
+    var p = document.getElementById('login-pass').value;
+    var err = document.getElementById('login-error');
+    var btn = document.getElementById('login-btn');
+
+    if (!u || !p) {
+      err.textContent = 'Completa todos los campos para continuar.';
+      err.classList.add('visible');
+      return;
+    }
+
+    // Simular autenticación (aquí se conecta al backend real)
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+    err.classList.remove('visible');
+
+    setTimeout(function() {
+      btn.disabled = false;
+      btn.textContent = 'Iniciar sesión';
+
+      // Credenciales demo — reemplazar por llamada real al backend
+      if ((u === 'admin' || u === 'carlos' || u.includes('@')) && p.length >= 4) {
+        isLoggedIn = true;
+        document.getElementById('login-overlay').classList.add('hidden');
+        goTo('home');
+        showToast('Bienvenido a PetroBalance', 'success', 'check');
+      } else {
+        err.textContent = 'Usuario o contraseña incorrectos.';
+        err.classList.add('visible');
+        document.getElementById('login-pass').value = '';
+        document.getElementById('login-pass').focus();
+      }
+    }, 600);
+  }
+
+  function doLoginGoogle() {
+    isLoggedIn = true;
+    document.getElementById('login-overlay').classList.add('hidden');
+    goTo('home');
+    showToast('Sesión iniciada con Google', 'success', 'check');
+  }
+
+  function doLogout() {
+    isLoggedIn = false;
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').classList.remove('visible');
+    document.getElementById('login-overlay').classList.remove('hidden');
+  }
+
+  // Guard: evita navegar sin sesión
   function goTo(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('screen-' + screenId);
+    if (!isLoggedIn && screenId !== 'home') return; // bloqueado sin login
+
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    var target = document.getElementById('screen-' + screenId);
     if (target) target.classList.add('active');
     window.scrollTo(0, 0);
 
-    // Update desktop topbar title
-    const titleEl = document.getElementById('desktopPageTitle');
+    var titleEl = document.getElementById('desktopPageTitle');
     if (titleEl) titleEl.textContent = PAGE_TITLES[screenId] || screenId;
 
-    // Update desktop sidebar active state
-    document.querySelectorAll('.desktop-sidebar .nav-item').forEach(el => el.classList.remove('active'));
-    const dskNav = document.getElementById('dsk-nav-' + screenId);
+    document.querySelectorAll('.desktop-sidebar .nav-item').forEach(function(el) { el.classList.remove('active'); });
+    var dskNav = document.getElementById('dsk-nav-' + screenId);
     if (dskNav) dskNav.classList.add('active');
-
-    // Show/hide desktop topbar (hide on login)
-    const topbar = document.getElementById('desktopTopbar');
-    if (topbar) topbar.style.display = screenId === 'login' ? 'none' : '';
-  }
-
-  function doLogin() {
-    const u = document.getElementById('login-user').value;
-    const p = document.getElementById('login-pass').value;
-    if (!u || !p) { showToast('Debe completar todos los campos', 'warning', 'info'); return; }
-    goTo('home');
-    showToast('Bienvenido a PetroBalance', 'success', 'check');
   }
 
   function openSideMenu() {
@@ -1725,7 +1416,7 @@
   function openModal(id) { document.getElementById(id).classList.add('open'); }
   function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-  document.querySelectorAll('.modal-overlay').forEach(m => {
+  document.querySelectorAll('.modal-overlay').forEach(function(m) {
     m.addEventListener('click', function(e) {
       if (e.target === this) this.classList.remove('open');
     });
@@ -1734,52 +1425,52 @@
   function saveForm(modalId) { closeModal(modalId); showToast('Registro realizado exitosamente', 'success', 'check'); }
 
   function selectTipo(el) {
-    el.closest('.tipo-selector').querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+    el.closest('.tipo-selector').querySelectorAll('.tipo-btn').forEach(function(b) { b.classList.remove('active'); });
     el.classList.add('active');
   }
 
   function selectTipoIngreso(el, tipo) {
-    el.closest('.tipo-selector').querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+    el.closest('.tipo-selector').querySelectorAll('.tipo-btn').forEach(function(b) { b.classList.remove('active'); });
     el.classList.add('active');
-    ['venta','cheque','factoring','credito'].forEach(t => {
+    ['venta','cheque','factoring','credito'].forEach(function(t) {
       document.getElementById('campos-' + t).style.display = t === tipo ? 'block' : 'none';
     });
   }
 
   function selectTipoGasto(el, tipo) {
-    el.closest('.tipo-selector').querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+    el.closest('.tipo-selector').querySelectorAll('.tipo-btn').forEach(function(b) { b.classList.remove('active'); });
     el.classList.add('active');
-    ['factura','boleta','corriente','cheque','financiero'].forEach(t => {
+    ['factura','boleta','corriente','cheque','financiero'].forEach(function(t) {
       var c = document.getElementById('gcampos-' + t);
       if (c) c.style.display = t === tipo ? 'block' : 'none';
     });
   }
 
   function setFilter(el) {
-    el.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    el.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
     el.classList.add('active');
   }
 
   function setRegistroFiltro(el, tipo) {
-    el.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    el.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
     el.classList.add('active');
     var titulos = { todos: 'Todos los movimientos', ingresos: 'Historial de ingresos', egresos: 'Historial de egresos', cheques: 'Historial de cheques' };
     document.getElementById('registros-titulo').textContent = titulos[tipo];
-    document.querySelectorAll('.reg-item').forEach(item => {
+    document.querySelectorAll('.reg-item').forEach(function(item) {
       item.style.display = (tipo === 'todos' || item.classList.contains('reg-' + tipo)) ? 'flex' : 'none';
     });
   }
 
   function setPeriod(el, period) {
-    el.closest('.period-tabs').querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+    el.closest('.period-tabs').querySelectorAll('.period-tab').forEach(function(t) { t.classList.remove('active'); });
     el.classList.add('active');
     drawChart(period);
   }
 
-  let toastTimer;
+  var toastTimer;
   function showToast(msg, type, iconType) {
-    const t = document.getElementById('toast');
-    const ic = document.getElementById('toast-icon');
+    var t = document.getElementById('toast');
+    var ic = document.getElementById('toast-icon');
     t.className = 'alert-toast ' + (type || 'success');
     document.getElementById('toast-msg').textContent = msg;
     var icons = {
@@ -1792,49 +1483,38 @@
     ic.innerHTML = icons[iconType] || icons.check;
     t.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2800);
   }
 
   // Bancos
-  let bancos = [
+  var bancos = [
     { nombre: 'BCP', moneda: 'USD', cuenta: '****-7823', tipo: 'Cta. Corriente', desc: '' },
     { nombre: 'BBVA', moneda: 'PEN', cuenta: '****-4510', tipo: 'Cta. Corriente', desc: '' },
     { nombre: 'Scotiabank', moneda: 'USD', cuenta: '****-1194', tipo: 'Cta. Corriente', desc: '' }
   ];
 
   function renderBancos() {
-    const lista = document.getElementById('banco-lista');
+    var lista = document.getElementById('banco-lista');
     document.getElementById('banco-count').textContent = bancos.length + ' banco' + (bancos.length !== 1 ? 's' : '');
     if (!bancos.length) { lista.innerHTML = '<div style="font-size:12px;color:var(--text-muted);text-align:center;padding:0.75rem 0">Sin bancos registrados</div>'; return; }
-    lista.innerHTML = bancos.map((b, i) => `
-      <div style="background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;padding:0.65rem 0.9rem;display:flex;align-items:center;gap:0.75rem">
-        <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${b.nombre.substring(0,4).toUpperCase()}</div>
-        <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${b.nombre}</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">${b.tipo} · ${b.cuenta}</div></div>
-        <span style="font-size:10px;color:var(--text-muted);background:rgba(255,255,255,0.1);border-radius:6px;padding:2px 7px;flex-shrink:0">${b.moneda}</span>
-        <div style="display:flex;gap:0.35rem;flex-shrink:0">
-          <button onclick="editarBanco(${i})" style="background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted)">
-            <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </button>
-          <button onclick="eliminarBanco(${i})" style="background:rgba(220,53,69,0.1);border:1px solid rgba(220,53,69,0.25);border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ff7070">
-            <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-          </button>
-        </div>
-      </div>`).join('');
+    lista.innerHTML = bancos.map(function(b, i) {
+      return '<div style="background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;padding:0.65rem 0.9rem;display:flex;align-items:center;gap:0.75rem"><div style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">' + b.nombre.substring(0,4).toUpperCase() + '</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">' + b.nombre + '</div><div style="font-size:11px;color:var(--text-muted);font-family:\'DM Mono\',monospace">' + b.tipo + ' · ' + b.cuenta + '</div></div><span style="font-size:10px;color:var(--text-muted);background:rgba(255,255,255,0.1);border-radius:6px;padding:2px 7px;flex-shrink:0">' + b.moneda + '</span><div style="display:flex;gap:0.35rem;flex-shrink:0"><button onclick="editarBanco(' + i + ')" style="background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted)"><svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button onclick="eliminarBanco(' + i + ')" style="background:rgba(220,53,69,0.1);border:1px solid rgba(220,53,69,0.25);border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ff7070"><svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></div>';
+    }).join('');
   }
 
   function guardarBanco() {
-    const nombre = document.getElementById('banco-nombre').value.trim();
-    const cuenta = document.getElementById('banco-cuenta').value.trim();
+    var nombre = document.getElementById('banco-nombre').value.trim();
+    var cuenta = document.getElementById('banco-cuenta').value.trim();
     if (!nombre || !cuenta) { showToast('Completa nombre y número de cuenta', 'warning', 'info'); return; }
-    const nuevo = { nombre, moneda: document.getElementById('banco-moneda').value, cuenta, tipo: document.getElementById('banco-tipo').value, desc: document.getElementById('banco-descripcion').value.trim() };
-    const idx = parseInt(document.getElementById('banco-edit-index').value);
+    var nuevo = { nombre: nombre, moneda: document.getElementById('banco-moneda').value, cuenta: cuenta, tipo: document.getElementById('banco-tipo').value, desc: document.getElementById('banco-descripcion').value.trim() };
+    var idx = parseInt(document.getElementById('banco-edit-index').value);
     if (idx >= 0) { bancos[idx] = nuevo; showToast('Banco actualizado', 'success', 'check'); }
     else { bancos.push(nuevo); showToast('Banco registrado', 'success', 'check'); }
     renderBancos(); cerrarModalBanco();
   }
 
   function editarBanco(i) {
-    const b = bancos[i];
+    var b = bancos[i];
     document.getElementById('modal-banco-titulo').textContent = 'Editar banco';
     document.getElementById('banco-edit-index').value = i;
     document.getElementById('banco-nombre').value = b.nombre;
@@ -1850,66 +1530,59 @@
   function cerrarModalBanco() {
     document.getElementById('modal-banco-titulo').textContent = 'Registrar banco';
     document.getElementById('banco-edit-index').value = -1;
-    ['banco-nombre','banco-cuenta','banco-descripcion'].forEach(id => document.getElementById(id).value = '');
+    ['banco-nombre','banco-cuenta','banco-descripcion'].forEach(function(id) { document.getElementById(id).value = ''; });
     document.getElementById('banco-moneda').value = 'USD';
     document.getElementById('banco-tipo').value = 'Cta. Corriente';
     closeModal('modalBanco');
   }
 
-  renderBancos();
-
   function drawChart(period) {
-    const svg = document.querySelector('.chart-svg');
-    const candlesG = svg.querySelector('#candles');
-    const line = svg.querySelector('#areaLine');
+    var svg = document.querySelector('.chart-svg');
+    var candlesG = svg.querySelector('#candles');
+    var line = svg.querySelector('#areaLine');
     candlesG.innerHTML = '';
-    const counts = { D:28, S:20, M:16, A:12 };
-    const n = counts[period] || 24;
-    const W = 340, H = 100;
-    let pts = [], y = 55;
-    for (let i = 0; i < n; i++) {
+    var counts = { D:28, S:20, M:16, A:12 };
+    var n = counts[period] || 24;
+    var W = 340, H = 100;
+    var pts = [], y = 55;
+    for (var i = 0; i < n; i++) {
       y += (Math.random() - 0.48) * 18;
       y = Math.max(10, Math.min(88, y));
       pts.push(y);
     }
-    const step = W / n;
-    pts.forEach((y, i) => {
-      const x = i * step + step * 0.5;
-      const open = y + (Math.random() - 0.5) * 8;
-      const close = y - (Math.random() - 0.5) * 8;
-      const high = Math.min(open, close) - Math.random() * 6;
-      const low = Math.max(open, close) + Math.random() * 6;
-      const isUp = close < open;
-      const color = isUp ? 'rgba(91,232,124,0.8)' : 'rgba(255,112,112,0.7)';
-      const w = Math.max(step * 0.45, 3);
-      const wick = document.createElementNS('http://www.w3.org/2000/svg','line');
+    var step = W / n;
+    pts.forEach(function(y, i) {
+      var x = i * step + step * 0.5;
+      var open = y + (Math.random() - 0.5) * 8;
+      var close = y - (Math.random() - 0.5) * 8;
+      var high = Math.min(open, close) - Math.random() * 6;
+      var low = Math.max(open, close) + Math.random() * 6;
+      var isUp = close < open;
+      var color = isUp ? 'rgba(91,232,124,0.8)' : 'rgba(255,112,112,0.7)';
+      var w = Math.max(step * 0.45, 3);
+      var wick = document.createElementNS('http://www.w3.org/2000/svg','line');
       wick.setAttribute('x1', x); wick.setAttribute('x2', x);
       wick.setAttribute('y1', high); wick.setAttribute('y2', low);
       wick.setAttribute('stroke', color); wick.setAttribute('stroke-width', '1');
       candlesG.appendChild(wick);
-      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      var rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
       rect.setAttribute('x', x - w/2); rect.setAttribute('y', Math.min(open, close));
       rect.setAttribute('width', w); rect.setAttribute('height', Math.max(Math.abs(open - close), 1.5));
       rect.setAttribute('fill', color); rect.setAttribute('rx', '1');
       candlesG.appendChild(rect);
     });
-    const coords = pts.map((y, i) => `${i * step + step * 0.5},${y}`).join(' ');
-    const firstX = step * 0.5, lastX = (pts.length - 1) * step + step * 0.5;
-    line.setAttribute('points', `${firstX},${H} ${coords} ${lastX},${H}`);
+    var coords = pts.map(function(y, i) { return (i * step + step * 0.5) + ',' + y; }).join(' ');
+    var firstX = step * 0.5, lastX = (pts.length - 1) * step + step * 0.5;
+    line.setAttribute('points', firstX + ',' + H + ' ' + coords + ' ' + lastX + ',' + H);
   }
 
-  drawChart('S');
-
-  let formatoSeleccionado = 'xlsx';
+  var formatoSeleccionado = 'xlsx';
   function selectFormato(fmt) {
     formatoSeleccionado = fmt;
-    ['xlsx','xml','csv'].forEach(f => document.getElementById('fmt-' + f).classList.remove('active'));
+    ['xlsx','xml','csv'].forEach(function(f) { document.getElementById('fmt-' + f).classList.remove('active'); });
     document.getElementById('fmt-' + fmt).classList.add('active');
   }
   function exportarRegistros() { showToast('Exportando ' + formatoSeleccionado.toUpperCase() + '...', 'success', 'file'); }
-
-  // Responsive: apply .screen-content-desktop padding via CSS class on desktop
-  // On desktop, .screen.active displays as block, content flows inside main-area
 </script>
 </body>
 </html>
